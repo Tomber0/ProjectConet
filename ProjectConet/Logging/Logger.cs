@@ -12,6 +12,7 @@ namespace ProjectConet.Logging
             {
                 if (_logger == null)
                 {
+                    LogManager.Configuration= new NLog.Config.XmlLoggingConfiguration(@"Config\NLog.config");
                     _logger = LogManager.GetLogger("Common");
                 }
                 return _logger;
