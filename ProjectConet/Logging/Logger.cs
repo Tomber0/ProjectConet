@@ -22,6 +22,5 @@ namespace ProjectConet.Logging
                 _logger = value;
             }
         }
-
     }
 }
