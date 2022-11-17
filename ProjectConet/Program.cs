@@ -4,3 +4,6 @@ using ProjectConet.Logging;
 Console.WriteLine("Hello, World!");
 Logger.Instance.Info("info");
 Logger.Instance.Info("info");
+
+въебать бота 
+    реализовать токен и команды
