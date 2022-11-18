@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Bot\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Config\NLOG.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

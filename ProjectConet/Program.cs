@@ -5,5 +5,7 @@ Console.WriteLine("Hello, World!");
 Logger.Instance.Info("info");
 Logger.Instance.Info("info");
 
-въебать бота 
+/*въебать бота 
     реализовать токен и команды
+    реализовать логику по которой бот добавляет файлы
+*/
