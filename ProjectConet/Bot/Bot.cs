@@ -11,6 +11,6 @@ namespace ProjectConet.Bot
 
         public abstract Task HandleUpdatesAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken);
 
-        public abstract Task HandleErrorsAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken);
+        public abstract Task HandleErrorsAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken);
     }
 }

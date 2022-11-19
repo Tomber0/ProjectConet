@@ -8,23 +8,28 @@ namespace ProjectConet.VideoDownload
         public async override void Download(string url, string fileDirUrl, string newFileName)
         {
             var youTube = YouTube.Default;
-            object videoTask = null;
+            YouTubeVideo video = null;
             try
             {
-                videoTask = await youTube.GetVideoAsync(url); 
+                video = await youTube.GetVideoAsync(url); 
             }
             catch (Exception ex)
             {
-                Logging.Logger.Instance.Error(ex.Message);
+                Logging.Logger.Instance.Error("Can't download video");
+                Logging.Logger.Instance.Error($"Message: {ex}");
             }
             var videoPath = $"{fileDirUrl}\\" + $"{newFileName}" + ".mp4";
-            try
+            if (video is not null)
             {
-                await File.WriteAllBytesAsync($"{videoPath}", ((YouTubeVideo)videoTask).GetBytes());
-            }
-            catch (Exception ex)
-            {
-                Logging.Logger.Instance.Error(ex.Message);
+                try
+                {
+                    await File.WriteAllBytesAsync($"{videoPath}", video?.GetBytes());
+                }
+                catch (Exception ex)
+                {
+                    Logging.Logger.Instance.Error("Can't save video");
+                    Logging.Logger.Instance.Error($"Message: {ex}");
+                }
             }
         }
 
