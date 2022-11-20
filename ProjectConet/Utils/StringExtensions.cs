@@ -4,11 +4,13 @@ namespace ProjectConet.Utils
 {
     internal static class StringExtensions
     {
-        public static string GetMainUrlPart(this string baseUrl) 
+        public static string GetMainUrlPart(this string baseUrl)
         {
-            Regex regex = new Regex(@$"^.+?(?=&)");
-            var matchedUrl = regex.Match(baseUrl);
-            return matchedUrl.Value;
+            var replacement = "";
+            string newUrl = baseUrl;
+            Regex regex = new Regex(@$"(?>&).+");
+            newUrl = regex.Replace(baseUrl, replacement);
+            return newUrl;
         }
     }
 }

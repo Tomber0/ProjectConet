@@ -12,7 +12,9 @@ namespace ProjectConet.Bot
         private TelegramBotClient _telegramBotClient;
         private CancellationTokenSource _cancellTokenSource;
         private MessageHandler _messageHandler;
-        
+        private string _fileName = "token.json";
+        private string _tokenName = "token";
+
         public TelegramBotClient TelegramBotClient
         {
             get
@@ -32,6 +34,7 @@ namespace ProjectConet.Bot
 {
             if (exception is ApiRequestException apiRequestException)
             {
+                Logging.Logger.Instance.Error(apiRequestException.ToString());
                 await botClient.SendTextMessageAsync(123, apiRequestException.ToString());
             }
         }
@@ -41,20 +44,26 @@ namespace ProjectConet.Bot
             if (update.Message is Message message)
             {
                 Logging.Logger.Instance.Info($"Message - {message.Text}");
+
+                //process the message
             }
         }
 
         public override void StartBot()
         {
-            var cancellationToken = new CancellationTokenSource();
-            var token = cancellationToken.Token;
+
+            _cancellTokenSource = new CancellationTokenSource();
+            var token = _cancellTokenSource.Token;
             var reciveOptions = new ReceiverOptions() { AllowedUpdates = { } };
-            string botToken = null;
+            string botToken = Utils.BotTokenProvider.GetTokenFromFileByKey(_fileName,_tokenName);
+            _telegramBotClient = new TelegramBotClient(botToken);
+            _telegramBotClient.StartReceiving(HandleUpdatesAsync, HandleErrorsAsync, reciveOptions, token);
         }
 
         public override void StopBot()
         {
             throw new NotImplementedException();
+            //?
         }
     }
 }

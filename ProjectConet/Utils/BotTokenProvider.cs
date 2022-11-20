@@ -2,13 +2,9 @@
 {
     internal static class BotTokenProvider
     {
-        public static string Token
+        public static string GetTokenFromFileByKey(string path, string key)
         {
-            get
-            {
-
-                return;
-            }
+                return JsonUtils.GetValueByKey(path,key)
         }
     }
 }
