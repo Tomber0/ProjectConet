@@ -16,6 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Config\BotConfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Config\NLOG.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

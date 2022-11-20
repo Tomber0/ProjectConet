@@ -11,5 +11,11 @@ namespace ProjectConet.Utils
             string newUrl = regex.Replace(baseUrl, replacement);
             return newUrl;
         }
+
+        public static bool IsYoutubeLink(this string url) 
+        {
+            Regex regex = new Regex(@".*youtube\.com+.+");
+            return regex.IsMatch(url);
+        }
     }
 }

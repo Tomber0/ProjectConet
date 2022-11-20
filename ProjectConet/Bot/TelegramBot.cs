@@ -43,15 +43,23 @@ namespace ProjectConet.Bot
         {
             if (update.Message is Message message)
             {
-                Logging.Logger.Instance.Info($"Message - {message.Text}");
-
-                //process the message
+                Logging.Logger.Instance.Info($"Recived message from {message.Chat.Id} : {message.Text}");
+                MessageHandler messageHandler = new MessageHandler();
+                if (message.Type == Telegram.Bot.Types.Enums.MessageType.Text)
+                {
+                    await Task.Run(()=> messageHandler.OnMessage(message));
+                }
+                else 
+                {
+                    var response = "only text";
+                    Logging.Logger.Instance.Info($"Sending response message to {message.Chat.Id} : {response}");
+                    await botClient.SendTextMessageAsync(message.Chat, response);
+                }
             }
         }
 
         public override void StartBot()
         {
-
             _cancellTokenSource = new CancellationTokenSource();
             var token = _cancellTokenSource.Token;
             var reciveOptions = new ReceiverOptions() { AllowedUpdates = { } };
