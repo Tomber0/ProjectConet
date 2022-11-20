@@ -18,7 +18,7 @@ namespace ProjectConet.VideoDownload
                 Logging.Logger.Instance.Error("Can't download video");
                 Logging.Logger.Instance.Error($"Message: {ex}");
             }
-            var videoPath = $"{fileDirUrl ?? Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"videos")}\\" + $"{newFileName ?? Guid.NewGuid().ToString()}" + ".mp4";
+            var videoPath = $"{Path.Combine(fileDirUrl ?? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "videos"), newFileName ?? Guid.NewGuid().ToString(), ".mp4")}";
             if (video is not null)
             {
                 try
