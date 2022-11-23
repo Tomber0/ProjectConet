@@ -14,7 +14,6 @@ namespace ProjectConet.Bot
         private MessageHandler _messageHandler;
         private string _fileName = "token.json";
         private string _tokenName = "token";
-
         public TelegramBotClient TelegramBotClient
         {
             get
@@ -22,7 +21,7 @@ namespace ProjectConet.Bot
                 return _telegramBotClient;
             }
         }
-        
+
         public CancellationTokenSource CancellationToken => _cancellTokenSource;
 
         public TelegramBot(MessageHandler messageHandler)
@@ -44,12 +43,12 @@ namespace ProjectConet.Bot
             if (update.Message is Message message)
             {
                 Logging.Logger.Instance.Info($"Recived message from {message.Chat.Id} : {message.Text}");
-                MessageHandler messageHandler = new MessageHandler();
+                MessageHandler messageHandler = new MessageHandler(botClient);
                 if (message.Type == Telegram.Bot.Types.Enums.MessageType.Text)
                 {
-                    await Task.Run(()=> messageHandler.OnMessage(message));
+                    await Task.Run(() => messageHandler.OnMessage(message));
                 }
-                else 
+                else
                 {
                     var response = "only text";
                     Logging.Logger.Instance.Info($"Sending response message to {message.Chat.Id} : {response}");
