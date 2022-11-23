@@ -1,42 +1,46 @@
-﻿using VideoLibrary;
+﻿using Conet.Utils;
+using ProjectConet.Utils;
+using VideoLibrary;
 
 
 namespace ProjectConet.VideoDownload
 {
     internal class VideoDownloaderFromYoutube:VideoDownloader
     {
-        public async override Task<string> Download(string url, string? fileDirUrl, string? newFileName)
+        public async override Task<string> DownloadVideoAsync(string url, string videoPath)
         {
+            if (url == String.Empty || !url.IsYoutubeLink())
+            {
+                throw new Exception("Url text is empty or not a link!");
+            }
+            var mainUrlPart = url.GetMainUrlPart();
             var youTube = YouTube.Default;
             YouTubeVideo video = null;
             try
             {
-                video = await youTube.GetVideoAsync(url);
+                video = await youTube.GetVideoAsync(mainUrlPart);
             }
             catch (Exception ex)
             {
-                Logging.Logger.Instance.Error("Can't download video");
-                Logging.Logger.Instance.Error($"Message: {ex}");
+                throw;
             }
-            var videoPath = $"{Path.Combine(fileDirUrl ?? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "videos"), newFileName ?? Guid.NewGuid().ToString(), ".mp4")}";
             if (video is not null)
             {
                 try
                 {
-                    await File.WriteAllBytesAsync($"{videoPath}", video?.GetBytes());
-                    return videoPath;
+                    using (FileStream fs = new FileStream(videoPath, FileMode.OpenOrCreate))
+                    {
+                        await fs.WriteAsync(video.GetBytes(), 0, video.GetBytes().Length);
+                    }
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logger.Instance.Error("Can't save video");
-                    Logging.Logger.Instance.Error($"Message: {ex}");
+                    videoPath = null;
+                    throw;
                 }
             }
             return videoPath;
         }
 
-        public override void Convert(string path)
-        {
-        }
     }
 }

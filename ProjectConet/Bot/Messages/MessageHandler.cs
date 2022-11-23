@@ -14,7 +14,7 @@ namespace ProjectConet.Bot.Messages
             if (message != null && message.Text.IsYoutubeLink()) 
             {
                 VideoDownloader videoDownloader = new VideoDownloaderFromYoutube();
-                var video = Task.Run(()=> videoDownloader.Download(message.Text, null, null)).Result;
+                var video = Task.Run(()=> videoDownloader.DownloadVideoAsync(message.Text, null, null)).Result;
             }
             return response;
         }
