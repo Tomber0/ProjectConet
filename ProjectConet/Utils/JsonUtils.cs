@@ -6,11 +6,19 @@ namespace ProjectConet.Utils
     {
         public static string GetValueByKey(string path, string key) 
         {
-            using (var reader = new StreamReader(path))
+            try
             {
-                var jsonFile = reader.ReadToEnd();
-                Dictionary<string, string> botTokens =  JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonFile);
-                return botTokens[key];
+                using (var reader = new StreamReader(path))
+                {
+                    var jsonFile = reader.ReadToEnd();
+                    Dictionary<string, string> botTokens = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonFile);
+                    return botTokens[key];
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.Logger.Instance.Error($"Can't find json file: {path}\n with token name: {key}\n, make shure it exists in 'Config' directory");
+                throw;
             }
         }
     }
