@@ -35,6 +35,10 @@ namespace ProjectConet.Utils
         public static Message UploadAudio(Models.Audio audio, ITelegramBotClient botClient, ChatId chatId)
         {
             Message message = new Message();
+            if (audio.FilePath == null) 
+            {
+                return botClient.SendTextMessageAsync(chatId, "not a link").Result;
+            }
             using (FileStream fs = new FileStream(audio.FilePath, FileMode.Open))
             {
                 message = botClient.SendAudioAsync(chatId, new Telegram.Bot.Types.InputFiles.InputOnlineFile(fs),title:$"{audio.Title}").Result;
