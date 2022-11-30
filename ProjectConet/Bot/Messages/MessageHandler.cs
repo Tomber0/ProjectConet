@@ -9,9 +9,9 @@ namespace ProjectConet.Bot.Messages
     {
         private ITelegramBotClient _botClient;
         public MessageHandler(ITelegramBotClient botClient) { botClient = _botClient; }
-        public string OnMessage(Message message) 
+        public async Task<string?> OnMessage(Message message) 
         {
-            string response = "";
+            string? response = null;
             if (message != null && message.Text.IsYoutubeLink()) 
             {
                 if (!Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "audios")))
@@ -26,10 +26,8 @@ namespace ProjectConet.Bot.Messages
                 var videoPath = $"{Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "videos"), $"{TimeUtils.CurrentTime}.mp4")}";
                 YoutubeVideoUtils.DownloadVideo(message.Text, videoPath);
                 var path = YoutubeVideoUtils.ConvertVideo(videoPath, audioPath);
-                using (FileStream fs = new FileStream(path, FileMode.Open)) 
-                {
-                    _botClient.SendAudioAsync(message.Chat, new Telegram.Bot.Types.InputFiles.InputOnlineFile(fs));
-                }
+                //YoutubeVideoUtils.UploadAudio(path, _botClient, message.Chat);
+                response = path;
             }
             return response;
         }

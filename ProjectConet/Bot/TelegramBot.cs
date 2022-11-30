@@ -1,5 +1,6 @@
-﻿using ProjectConet.Bot.Messages;
-using System;
+﻿using Conet.Utils;
+using ProjectConet.Bot.Messages;
+using ProjectConet.Utils;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
@@ -11,7 +12,6 @@ namespace ProjectConet.Bot
     {
         private TelegramBotClient _telegramBotClient;
         private CancellationTokenSource _cancellTokenSource;
-        private MessageHandler _messageHandler;
         private string _fileName = "token.json";
         private string _tokenName = "token";
         public TelegramBotClient TelegramBotClient
@@ -24,9 +24,10 @@ namespace ProjectConet.Bot
 
         public CancellationTokenSource CancellationToken => _cancellTokenSource;
 
-        public TelegramBot(MessageHandler messageHandler)
+        public TelegramBot(string tokenFileName, string tokenName)
         {
-            _messageHandler = messageHandler;
+            _fileName = tokenFileName;
+            _tokenName = tokenName;
         }
 
         public async override Task HandleErrorsAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
@@ -46,7 +47,13 @@ namespace ProjectConet.Bot
                 MessageHandler messageHandler = new MessageHandler(botClient);
                 if (message.Type == Telegram.Bot.Types.Enums.MessageType.Text)
                 {
-                    await Task.Run(() => messageHandler.OnMessage(message));
+                    var filePath = await Task.Run(() => messageHandler.OnMessage(message));
+                    if (filePath != null) 
+                    {
+                        Logging.Logger.Instance.Info($"Sending audio message to {message.Chat.Id}");
+                        var m = YoutubeVideoUtils.UploadAudio(filePath, botClient, message.Chat);
+                        Logging.Logger.Instance.Info($"Sent audio message to {message.Chat.Id}, audioId: {m.Audio?.FileId} ");
+                    }
                 }
                 else
                 {
