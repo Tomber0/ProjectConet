@@ -3,6 +3,6 @@
 
     abstract class VideoDownloader
     {
-        public abstract Task<string> DownloadVideoAsync(string url, string filePath);
+        public abstract Task<Models.Video> DownloadVideoAsync(string url, string filePath);
     }
 }

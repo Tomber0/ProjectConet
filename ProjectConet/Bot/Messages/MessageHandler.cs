@@ -9,9 +9,9 @@ namespace ProjectConet.Bot.Messages
     {
         private ITelegramBotClient _botClient;
         public MessageHandler(ITelegramBotClient botClient) { botClient = _botClient; }
-        public async Task<string?> OnMessage(Message message) 
+        public async Task<Models.Audio> OnMessage(Message message) 
         {
-            string? response = null;
+            Models.Audio audio = new Models.Audio();
             if (message != null && message.Text.IsYoutubeLink()) 
             {
                 if (!Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "audios")))
@@ -24,12 +24,11 @@ namespace ProjectConet.Bot.Messages
                     Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "videos"));
                 }
                 var videoPath = $"{Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "videos"), $"{TimeUtils.CurrentTime}.mp4")}";
-                YoutubeVideoUtils.DownloadVideo(message.Text, videoPath);
-                var path = YoutubeVideoUtils.ConvertVideo(videoPath, audioPath);
-                //YoutubeVideoUtils.UploadAudio(path, _botClient, message.Chat);
-                response = path;
+                var video = YoutubeVideoUtils.DownloadVideo(message.Text, videoPath);
+                audio = YoutubeVideoUtils.ConvertVideo(video, audioPath);
+                
             }
-            return response;
+            return audio;
         }
 
     }

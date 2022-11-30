@@ -7,7 +7,7 @@ namespace ProjectConet.VideoDownload
 {
     internal class VideoDownloaderFromYoutube:VideoDownloader
     {
-        public async override Task<string> DownloadVideoAsync(string url, string videoPath)
+        public async override Task<Models.Video> DownloadVideoAsync(string url, string videoPath)
         {
             if (url == String.Empty || !url.IsYoutubeLink())
             {
@@ -15,6 +15,7 @@ namespace ProjectConet.VideoDownload
             }
             var mainUrlPart = url.GetMainUrlPart();
             var youTube = YouTube.Default;
+            var title = string.Empty;
             YouTubeVideo video = null;
             try
             {
@@ -39,7 +40,7 @@ namespace ProjectConet.VideoDownload
                     throw;
                 }
             }
-            return videoPath;
+            return new Models.Video(video.Title, videoPath);
         }
 
     }
