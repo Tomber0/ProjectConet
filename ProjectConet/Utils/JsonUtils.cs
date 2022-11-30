@@ -17,7 +17,7 @@ namespace ProjectConet.Utils
             }
             catch (Exception ex)
             {
-                Logging.Logger.Instance.Error($"Can't find json file: {path}\n with token name: {key}\n, make shure it exists in 'Config' directory");
+                Logging.Logger.Instance.Error($"Can't find json file: {path}\n with token name: {key},\n make shure it exists in 'Config' directory");
                 throw;
             }
         }
