@@ -47,7 +47,7 @@ namespace ProjectConet.Bot
                 MessageHandler messageHandler = new MessageHandler(botClient);
                 if (message.Type == Telegram.Bot.Types.Enums.MessageType.Text)
                 {
-                    var filePath = await Task.Run(() => messageHandler.OnMessage(message));
+                    var filePath = Task.Run(() => messageHandler.OnMessage(message)).Result;
                     if (filePath != null) 
                     {
                         Logging.Logger.Instance.Info($"Sending audio message to {message.Chat.Id}");

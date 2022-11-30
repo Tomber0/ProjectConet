@@ -9,6 +9,7 @@ namespace ProjectConet.Bot.Messages
     {
         private ITelegramBotClient _botClient;
         public MessageHandler(ITelegramBotClient botClient) { botClient = _botClient; }
+
         public async Task<Models.Audio> OnMessage(Message message) 
         {
             Models.Audio audio = new Models.Audio();
@@ -26,7 +27,6 @@ namespace ProjectConet.Bot.Messages
                 var videoPath = $"{Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "videos"), $"{TimeUtils.CurrentTime}.mp4")}";
                 var video = YoutubeVideoUtils.DownloadVideo(message.Text, videoPath);
                 audio = YoutubeVideoUtils.ConvertVideo(video, audioPath);
-                
             }
             return audio;
         }
