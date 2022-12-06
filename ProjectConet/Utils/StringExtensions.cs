@@ -14,7 +14,7 @@ namespace ProjectConet.Utils
 
         public static bool IsYoutubeLink(this string url) 
         {
-            Regex regex = new Regex(@".*youtube\.com+.+");
+            Regex regex = new Regex(@".*youtu+.+");
             return regex.IsMatch(url);
         }
     }
