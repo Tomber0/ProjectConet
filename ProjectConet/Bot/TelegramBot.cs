@@ -47,13 +47,16 @@ namespace ProjectConet.Bot
                 MessageHandler messageHandler = new MessageHandler(botClient);
                 if (message.Type == Telegram.Bot.Types.Enums.MessageType.Text)
                 {
-                    var filePath = await Task.Run(() => messageHandler.OnMessage(message));
-                    if (filePath != null) 
+                    Task.Run(async () => 
                     {
-                        Logging.Logger.Instance.Info($"Sending audio message to {message.Chat.Id}");
-                        var m = YoutubeVideoUtils.UploadAudio(filePath, botClient, message.Chat);
-                        Logging.Logger.Instance.Info($"Sent audio message to {message.Chat.Id}, audioId: {m.Audio?.FileId} ");
-                    }
+                        var filePath = await Task.Run(() => messageHandler.OnMessage(message));
+                        if (filePath != null)
+                        {
+                            Logging.Logger.Instance.Info($"Sending audio message to {message.Chat.Id}");
+                            var m = YoutubeVideoUtils.UploadAudio(filePath, botClient, message.Chat);
+                            Logging.Logger.Instance.Info($"Sent audio message to {message.Chat.Id}, audioId: {m.Audio?.FileId} ");
+                        }
+                    });
                 }
                 else
                 {
