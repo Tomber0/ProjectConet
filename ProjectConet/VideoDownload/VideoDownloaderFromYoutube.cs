@@ -1,6 +1,8 @@
 ﻿using Conet.Utils;
 using ProjectConet.Utils;
-using VideoLibrary;
+//using VideoLibrary;
+using YoutubeExplode;
+using YoutubeExplode.Videos.Streams;
 
 
 namespace ProjectConet.VideoDownload
@@ -14,12 +16,18 @@ namespace ProjectConet.VideoDownload
                 throw new Exception("Url text is empty or not a link!");
             }
             var mainUrlPart = url.GetMainUrlPart();
-            var youTube = YouTube.Default;
+            //var youTube = YouTube.Default;
             var title = string.Empty;
-            YouTubeVideo video = null;
+            YoutubeExplode.Videos.Video video = null;
+            StreamManifest streamManifest = null;
+            var youtube = new YoutubeClient();
+
             try
             {
-                video = await youTube.GetVideoAsync(mainUrlPart);
+                video = await youtube.Videos.GetAsync(url);
+                streamManifest = await youtube.Videos.Streams.GetManifestAsync(url);
+
+                //video = await youTube.GetVideoAsync(mainUrlPart);
             }
             catch (Exception ex)
             {
@@ -29,18 +37,30 @@ namespace ProjectConet.VideoDownload
             {
                 try
                 {
-                    using (FileStream fs = new FileStream(videoPath, FileMode.OpenOrCreate))
+                    var streamInfo = streamManifest.GetMuxedStreams().GetWithHighestVideoQuality();
+
+                    var stream = await youtube.Videos.Streams.GetAsync(streamInfo);
+
+                    await youtube.Videos.Streams.DownloadAsync(streamInfo, videoPath);
+
+/*                    using (FileStream fs = new FileStream(videoPath, FileMode.OpenOrCreate))
                     {
-                        await fs.WriteAsync(video.GetBytes(), 0, video.GetBytes().Length);
+                        var streamInfo = streamManifest.GetMuxedStreams().GetWithHighestVideoQuality();
+
+                        var stream = await youtube.Videos.Streams.GetAsync(streamInfo);
+
+                        await youtube.Videos.Streams.DownloadAsync(streamInfo,fs.Name);
+
+                        //await fs.WriteAsync(video.GetBytes(), 0, video.GetBytes().Length);
                     }
-                }
+*/                }
                 catch (Exception ex)
                 {
                     videoPath = null;
                     throw;
                 }
             }
-            return new Models.Video(video.Title, videoPath);
+            return new Models.Video(video.Title,video.Author.ChannelTitle, videoPath);
         }
 
     }

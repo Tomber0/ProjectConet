@@ -29,7 +29,7 @@ namespace ProjectConet.Utils
             {
                 throw;
             }
-            return new Models.Audio(videoInput.Title, audioFile);
+            return new Models.Audio(videoInput.Title, videoInput.Author, audioFile);
         }
 
         public static Message UploadAudio(Models.Audio audio, ITelegramBotClient botClient, ChatId chatId)
@@ -41,7 +41,7 @@ namespace ProjectConet.Utils
             }
             using (FileStream fs = new FileStream(audio.FilePath, FileMode.Open))
             {
-                message = botClient.SendAudioAsync(chatId, new Telegram.Bot.Types.InputFiles.InputOnlineFile(fs),title:$"{audio.Title}").Result;
+                message = botClient.SendAudioAsync(chatId, new Telegram.Bot.Types.InputFiles.InputOnlineFile(fs), title: $"{audio.Title}", performer:$"{audio.Author}").Result;
             }
             return message;
         }
