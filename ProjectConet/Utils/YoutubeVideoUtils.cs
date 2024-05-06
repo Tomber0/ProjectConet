@@ -32,6 +32,8 @@ namespace ProjectConet.Utils
             return new Models.Audio(videoInput.Title, audioFile);
         }
 
+
+
         public static Message UploadAudio(Models.Audio audio, ITelegramBotClient botClient, ChatId chatId)
         {
             Message message = new Message();
@@ -42,6 +44,22 @@ namespace ProjectConet.Utils
             using (FileStream fs = new FileStream(audio.FilePath, FileMode.Open))
             {
                 message = botClient.SendAudioAsync(chatId, new Telegram.Bot.Types.InputFiles.InputOnlineFile(fs),title:$"{audio.Title}").Result;
+            }
+            return message;
+        }
+
+        public static Message UploadVideo(Models.Video video, ITelegramBotClient botClient, ChatId chatId)
+        {
+            Message message = new Message();
+            if (video.FilePath == null) 
+            {
+                return botClient.SendTextMessageAsync(chatId, "not a link").Result;
+            }
+            using (FileStream fs = new FileStream(video.FilePath, FileMode.Open))
+            {
+                //message = botClient.SendVideoAsync(chatId, new Telegram.Bot.Types.InputFiles.InputOnlineFile(fs),)
+
+                message = botClient.SendAudioAsync(chatId, new Telegram.Bot.Types.InputFiles.InputOnlineFile(fs),title:$"{video.Title}").Result;
             }
             return message;
         }

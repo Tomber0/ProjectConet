@@ -15,11 +15,16 @@ namespace ProjectConet.VideoDownload
             }
             var mainUrlPart = url.GetMainUrlPart();
             var youTube = YouTube.Default;
+            
             var title = string.Empty;
             YouTubeVideo video = null;
             try
             {
+                //                video = videos.First(i => i.Resolution == videos.Max(j => j.Resolution));
+
                 video = await youTube.GetVideoAsync(mainUrlPart);
+                Console.WriteLine(video.Resolution); 
+                
             }
             catch (Exception ex)
             {
